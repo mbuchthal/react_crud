@@ -24,9 +24,9 @@ todoRouter.get('/todos', (req, res) => {
 });
 
 todoRouter.put('/todos/:id', bodyParser, (req, res) => {
-  var heroData = req.body;
-  delete heroData._id;
-  Todo.findByIdAndUpdate({ _id: req.params.id }, heroData, (err) => {
+  var todoData = req.body;
+  delete todoData._id;
+  Todo.findByIdAndUpdate({ _id: req.params.id }, todoData, (err) => {
     if (err) return serverErrorHandler(err, res);
 
     res.status(200).json({ msg: 'updated' });
