@@ -3,24 +3,30 @@ import CreateTodo from './create-todo';
 import TodosList from './todos-list';
 import _ from 'lodash';
 
-const todos = [
-  {
-    task: 'make React tutorial',
-    isCompleted: false
-  },
-  {
-    task: 'eat dinner',
-    isCompleted: true
-  }
-];
+import request from 'superagent';
+
+const url = 'http://localhost:3000/api/';
+
+var todos = [];
 
 export default class App extends React.Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
       todos
     };
+  }
+
+  componentDidMount() {
+    request
+      .get(url + 'todos')
+      .end((err, res) => {
+        if (err) throw err;
+        todos = res.body;
+        this.setState({ todos });
+      });
   }
 
   render() {
@@ -45,21 +51,41 @@ export default class App extends React.Component {
   }
 
   createTask(task) {
-    this.state.todos.push({
-      task,
-      isCompleted: false
-    });
-    this.setState({ todos: this.state.todos });
+    request
+      .post(url + 'todos')
+      .send({ task, isCompleted: false })
+      .end((err, res) => {
+        if (err) console.log('error in POST');
+        this.state.todos.push({
+          task,
+          isCompleted: false
+        });
+        this.setState({ todos: this.state.todos });
+      });
   }
 
   saveTask(oldTask, newTask) {
-    const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);
+    var foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);
+    var id = foundTodo._id;
+    console.log(foundTodo);
     foundTodo.task = newTask;
-    this.setState({ todos: this.state.todos });
+    request
+      .put(url + 'todos/' + id)
+      .send({ task: newTask })
+      .end((err, res) => {
+        if (err) console.log('error in PUT');
+        this.setState({ todos: this.state.todos });
+      });
   }
 
   deleteTask(taskToDelete) {
+    var deleteTodo = _.find(this.state.todos, todo => todo.task === taskToDelete);
     _.remove(this.state.todos, todo => todo.task === taskToDelete);
-    this.setState({ todos: this.state.todos });
+    request
+      .del(url + 'todos/' + deleteTodo._id)
+      .end((err, res) => {
+        if (err) console.log('error in PUT');
+        this.setState({ todos: this.state.todos });
+      });
   }
 }

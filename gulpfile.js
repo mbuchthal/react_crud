@@ -1,9 +1,8 @@
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const babel = require('gulp-babel');
+const webpack = require('webpack-stream');
 const sourcemaps = require('gulp-sourcemaps');
-const react = require('gulp-react');
 
 var files = ['src/**/*.js', 'server.js', 'gulpfile.js',
   './models/**/*.js', './lib/**/*.js', './routes/**/*.js'];
@@ -12,17 +11,11 @@ var testFiles = ['./test/**/*.js'];
 var path = {
   HTML: 'src/index.html',
   ALL: ['src/**/*.js', 'src/index.html'],
-  JS: ['src/**/*.js']
+  JS: ['src/**/*.js'],
   DEST_SRC: 'src',
   DEST_BUILD: ' build',
   DEST: 'dist'
 };
-
-gulp.task('transform', () => {
-  return gulp.src(path.JS)
-    .pipe(react())
-    .pipe(gulp.dest(path.DEST_SRC));
-});
 
 gulp.task('lint', () => {
   return gulp.src(files, testFiles)
@@ -49,15 +42,30 @@ gulp.task('lint', () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('babel', () => {
-  .pipe(sourcemaps.init())
-  .pipe(babel({
-    only: [
-      'src/components',
+gulp.task('build:dev', () => {
+  return webpack({
+    devtool: 'source-map',
+    entry: [
+      __dirname + '/src/index.js'
     ],
-    compact: false
-  }))
-  .pipe(sourcemaps.write('./build'))
+    output: {
+      filename: 'bundle.js'
+    },
+    // resolve: {
+    //   modulesDirectories: ['node_modules', 'src'],
+    //   extensions: ['', '.js']
+    // },
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loaders: ['babel?presets[]=react,presets[]=es2015']
+        }
+      ]
+    }
+  })
+  .pipe(gulp.dest('build/'));
 });
 
 gulp.task('watch', () => {

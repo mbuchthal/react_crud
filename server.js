@@ -4,14 +4,28 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const todoRouter = require(__dirname + '/routes/todo_router');
+
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/todo_db');
 
-app.use('/', express.static(__dirname + 'index.html'));
+const baseRouter = express.Router();
 
-app.get('*', (req, res) => {
-  res.status(200).sendFile(__dirname + '/index.html');
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
+  next();
 });
+
+app.use('/', express.static(__dirname));
+
+// app.use('/', express.static(__dirname + 'index.html'));
+
+// app.get('*', (req, res) => {
+//   res.status(200).sendFile(__dirname + '/index.html');
+// });
+
 app.use('/api', todoRouter);
+// app.use('/', baseRouter);
 
 app.use((req, res) => {
   res.status(404).json({ 'msg': '404 - Page Not Found!' });
