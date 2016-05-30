@@ -1,10 +1,13 @@
 import React from 'react';
+// import Todo from '../../models/todo';
 import CreateTodo from './create-todo';
 import TodosList from './todos-list';
 import _ from 'lodash';
 
+
 import request from 'superagent';
 
+// const Todo = require(__dirname + '../../../models/todo');
 const url = 'http://localhost:3000/api/';
 
 var todos = [];
@@ -56,10 +59,9 @@ export default class App extends React.Component {
       .send({ task, isCompleted: false })
       .end((err, res) => {
         if (err) console.log('error in POST');
-        this.state.todos.push({
-          task,
-          isCompleted: false
-        });
+
+        var newTask = res.body;
+        this.state.todos.push(newTask);
         this.setState({ todos: this.state.todos });
       });
   }

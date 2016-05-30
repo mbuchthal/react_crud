@@ -73,7 +73,7 @@ export default class TodosListItem extends React.Component {
   }
 
   onSaveClick(event) {
-    event.preventDefault();
+    // event.preventDefault();
 
     const oldTask = this.props.task;
     const newTask = this.refs.editInput.value;

@@ -6,7 +6,9 @@ I have added a mongo database and todo schema as well as basic routes on a serve
 
 Currently to run the application:
 
-  First, `gulp build:dev`
+  First, make sure mongo is running.
+
+  Then, `gulp build:dev`.
 
   Next, `node server` and go to localhost:3000
 
