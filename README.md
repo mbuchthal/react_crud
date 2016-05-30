@@ -4,6 +4,12 @@ This is a basic react todo app based on https://www.youtube.com/watch?v=IR6smI_Y
 
 I have added a mongo database and todo schema as well as basic routes on a server.
 
-currently to run the server, you can do one of 2 things:
-  1) use'webpack-dev-server' -- and then go to localhost:8080
-  2) alternatively, run 'node server', and got to port 3000, or your environment PORT
+Currently to run the application:
+
+  First, `gulp build:dev`
+
+  Next, `node server` and go to localhost:3000
+
+  OR
+
+  `webpack-dev-server` and go to localhost:8080

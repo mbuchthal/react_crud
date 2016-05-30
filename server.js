@@ -18,14 +18,7 @@ app.use((req, res, next) => {
 
 app.use('/', express.static(__dirname));
 
-// app.use('/', express.static(__dirname + 'index.html'));
-
-// app.get('*', (req, res) => {
-//   res.status(200).sendFile(__dirname + '/index.html');
-// });
-
 app.use('/api', todoRouter);
-// app.use('/', baseRouter);
 
 app.use((req, res) => {
   res.status(404).json({ 'msg': '404 - Page Not Found!' });
